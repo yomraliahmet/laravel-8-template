@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Response;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -33,5 +36,16 @@ class Handler extends ExceptionHandler
     public function register()
     {
         //
+    }
+
+    public function render($request, Throwable $e)
+    {
+        if($e instanceof AuthenticationException){
+            if($request->isJson() || $request->ajax()){
+                return Response::error("status.401", 401);
+            }
+        }
+
+        return parent::render($request, $e);
     }
 }
