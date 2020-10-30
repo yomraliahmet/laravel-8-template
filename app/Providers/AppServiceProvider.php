@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+       View::share('templateUrl', url('assets/backend/templates/'. config('admin.template')));
+       View::share('templateViewPath', config("admin.view_path"));
     }
 }

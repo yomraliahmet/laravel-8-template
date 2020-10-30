@@ -166,6 +166,8 @@ return [
          * Package Service Providers...
          */
 
+        Intervention\Image\ImageServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -175,6 +177,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ResponseServiceProvider::class,
+        App\Providers\ButtonServiceProvider::class,
+
+        App\Providers\TranslationServiceProvider::class,
 
     ],
 
@@ -227,6 +232,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Intervention' => Intervention\Image\Facades\Image::class,
 
     ],
 

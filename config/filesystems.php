@@ -65,6 +65,12 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'images' => [
+            'driver' => env('FILE_DRIVER', 'local'),
+            'root'   => env('FILE_DRIVER', 'local') == 'local' ? public_path('images') : 'images',
+            'url'    => env('FILE_DRIVER', 'local') == 'local' ? env('APP_URL') . '/images' : null,
+        ],
+
     ],
 
     /*

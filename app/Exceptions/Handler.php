@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,6 +48,24 @@ class Handler extends ExceptionHandler
             }
         }
 
+        if($e instanceof AuthorizationException){
+
+            if($request->isJson() || $request->ajax()){
+                if(in_array("login",explode(".",$request->route()->getName()))){
+                    return Response::error("messages.common.login_error", 403);
+                }
+                return Response::error("status.403", 403);
+            }
+        }
+
         return parent::render($request, $e);
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if (in_array('admin', $exception->guards())) {
+            return redirect()->route('admin.login');
+        }
+        return redirect()->route('web.home');
     }
 }

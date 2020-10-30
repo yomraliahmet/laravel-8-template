@@ -10,4 +10,9 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function adminViewTemplatePath()
+    {
+        return "admin.templates.". config('admin.template');
+    }
 }

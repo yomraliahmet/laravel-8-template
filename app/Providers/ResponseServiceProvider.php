@@ -25,43 +25,42 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Response::macro("redirectToJson", function(string $url, int $status = 200, array $headers = [], int $options = 0): JsonResponse {
-            return response()->json([
-                'url'    => $url,
-            ], $status, $headers, $options);
-        });
+        Response::macro("redirectToJson", function(string $url, $data = [], int $status = 200, array $headers = [], int $options = 0): JsonResponse {
 
-        Response::macro("success", function($data = [], int $status = 200, array $headers = [], int $options = 0): JsonResponse {
-            if(is_array($data)) $message = $data["message"] ?? trans('messages.common.success_message');
-            if(!is_array($data)) $message = trans($data);
-            $arr = [
-                'code'    => $data["code"] ?? "success",
-                'title'   => $data["title"] ?? trans('messages.common.success_title'),
-                'message' => $message,
-                'data'    => $data["data"] ?? []
-            ];
+            $arr = ['url' => $url];
+            if(isset($data["code"])) $arr["code"] = $data["code"];
+            if(isset($data["message"])) $arr["message"] = $data["message"];
 
-            if(count($arr["data"]) == 0) unset($arr["data"]);
-
-            if(isset($data["token"])) $arr["token"] = $data["token"];
             return response()->json($arr, $status, $headers, $options);
         });
 
-        Response::macro("error", function($data = [], int $status = 400, array $headers = [], int $options = 0): JsonResponse{
+        Response::macro("success", function(string $message = null, $data = [], int $status = 200, array $headers = [], int $options = 0): JsonResponse {
+            $arr = [
+                'code'    => $data["code"] ?? "success",
+                'title'   => $data["title"] ?? trans('messages.common.success_title'),
+                'message' => $message ?? trans('messages.common.success_message'),
+            ];
 
-            if(is_array($data)) $message = $data["message"] ?? trans('errors.common.error_message');
-            if(!is_array($data)) $message = trans($data);
+            if(isset($data["url"])) $arr["url"] = $data["url"];
+            if(isset($data["token"])) $arr["token"] = $data["token"];
+            if(isset($data["data"])) $arr["data"] = $data["data"] ?? [];
+
+            return response()->json($arr, $status, $headers, $options);
+        });
+
+        Response::macro("error", function(string $message = null, $data = [], int $status = 400, array $headers = [], int $options = 0): JsonResponse{
 
             $arr = [
                 'code'    => $data["code"] ?? "error",
                 'title'   => $data["title"] ?? trans('errors.common.error_title'),
-                'message' => $message,
-                'data'    => $data["data"] ?? []
+                'message' => $message ?? trans('messages.common.success_message'),
             ];
 
-            if(count($arr["data"]) == 0) unset($arr["data"]);
+            if(isset($data["url"])) $arr["url"] = $data["url"];
+            if(isset($data["data"])) $arr["data"] = $data["data"] ?? [];
 
             return response()->json($arr, $status, $headers, $options);
         });
+
     }
 }

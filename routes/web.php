@@ -16,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name("home")->prefix("web");
+
+Route::get('assets/js/translation.js', 'GlobalController@jsTrranslation');
